@@ -1,0 +1,129 @@
+{
+  "entries": [
+    {
+      "timestamp": "2026-03-27T16:54:11.237925",
+      "food": "beef brisket sandwich",
+      "meal_type": "lunch",
+      "notes": "",
+      "analysis": {
+        "rating": "avoid",
+        "emoji": "\u274c",
+        "advice": "HIGH PURINE - Avoid: beef",
+        "matches": {
+          "avoid": [
+            [
+              "beef",
+              "red_meat"
+            ]
+          ],
+          "caution": [],
+          "safe": [],
+          "beneficial": []
+        },
+        "analyzed_at": "2026-03-27T16:54:11.237909"
+      }
+    },
+    {
+      "timestamp": "2026-03-27T16:54:11.259503",
+      "food": "cherries",
+      "meal_type": "snack",
+      "notes": "handful",
+      "analysis": {
+        "rating": "safe",
+        "emoji": "\u2705",
+        "advice": "Safe! Extra benefit: cherries",
+        "matches": {
+          "avoid": [],
+          "caution": [],
+          "safe": [
+            [
+              "cherries",
+              "fruits"
+            ]
+          ],
+          "beneficial": [
+            [
+              "cherries",
+              "anti_inflammatory"
+            ]
+          ]
+        },
+        "analyzed_at": "2026-03-27T16:54:11.259489"
+      }
+    },
+    {
+      "timestamp": "2026-03-27T16:54:11.278470",
+      "food": "grilled chicken breast",
+      "meal_type": "dinner",
+      "notes": "plain, no sauce",
+      "analysis": {
+        "rating": "caution",
+        "emoji": "\u26a0\ufe0f",
+        "advice": "Moderate purine - Small portions okay: chicken",
+        "matches": {
+          "avoid": [],
+          "caution": [
+            [
+              "chicken",
+              "poultry"
+            ]
+          ],
+          "safe": [],
+          "beneficial": []
+        },
+        "analyzed_at": "2026-03-27T16:54:11.278458"
+      }
+    },
+    {
+      "timestamp": "2026-03-27T16:54:14.557963",
+      "food": "salmon sashimi",
+      "meal_type": "dinner",
+      "notes": "3 pieces",
+      "analysis": {
+        "rating": "caution",
+        "emoji": "\u26a0\ufe0f",
+        "advice": "Moderate purine - Small portions okay: salmon",
+        "matches": {
+          "avoid": [],
+          "caution": [
+            [
+              "salmon",
+              "fish"
+            ]
+          ],
+          "safe": [],
+          "beneficial": []
+        },
+        "analyzed_at": "2026-03-27T16:54:14.557949"
+      }
+    },
+    {
+      "timestamp": "2026-03-27T16:56:27.179762",
+      "food": "salmon with mashed potatoes and stewed cabbage",
+      "meal_type": "lunch",
+      "notes": "takeout container",
+      "analysis": {
+        "rating": "caution",
+        "emoji": "\u26a0\ufe0f",
+        "advice": "Moderate purine - Small portions okay: salmon",
+        "matches": {
+          "avoid": [],
+          "caution": [
+            [
+              "salmon",
+              "fish"
+            ]
+          ],
+          "safe": [
+            [
+              "cabbage",
+              "vegetables"
+            ]
+          ],
+          "beneficial": []
+        },
+        "analyzed_at": "2026-03-27T16:56:27.179746"
+      }
+    }
+  ]
+}
