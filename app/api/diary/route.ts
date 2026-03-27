@@ -1,27 +1,26 @@
 import { NextResponse } from 'next/server';
-import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
 
 export async function GET() {
-  // Try multiple paths to find diary.json
-  const paths = [
-    join(process.cwd(), 'diary.json'),
-    join(process.cwd(), '..', 'diary.json'),
-    '/home/ubuntu/clawd/health/gout-tracker/diary.json',
-  ];
-  
-  let diaryPath = null;
-  for (const path of paths) {
-    if (existsSync(path)) {
-      diaryPath = path;
-      break;
+  try {
+    // Fetch from GitHub raw URL
+    const response = await fetch(
+      'https://raw.githubusercontent.com/donogeme/gout-tracker/master/diary.json',
+      { cache: 'no-store' }  // Always fetch fresh data
+    );
+    
+    if (!response.ok) {
+      return NextResponse.json({ 
+        entries: [], 
+        error: `Failed to fetch: ${response.status}` 
+      });
     }
+    
+    const data = await response.json();
+    return NextResponse.json(data);
+  } catch (error) {
+    return NextResponse.json({ 
+      entries: [], 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    });
   }
-  
-  if (!diaryPath) {
-    return NextResponse.json({ entries: [], error: 'diary.json not found' });
-  }
-  
-  const data = readFileSync(diaryPath, 'utf-8');
-  return NextResponse.json(JSON.parse(data));
 }
