@@ -2,10 +2,16 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    // Fetch from GitHub raw URL
+    // Fetch from GitHub API (more reliable than raw URL)
     const response = await fetch(
-      'https://raw.githubusercontent.com/donogeme/gout-tracker/master/diary.json',
-      { cache: 'no-store' }  // Always fetch fresh data
+      'https://api.github.com/repos/donogeme/gout-tracker/contents/diary.json',
+      { 
+        cache: 'no-store',
+        headers: {
+          'Accept': 'application/vnd.github.v3+json',
+          'User-Agent': 'gout-tracker-dashboard'
+        }
+      }
     );
     
     if (!response.ok) {
@@ -15,7 +21,10 @@ export async function GET() {
       });
     }
     
-    const data = await response.json();
+    const apiResponse = await response.json();
+    // Decode base64 content from GitHub API
+    const content = Buffer.from(apiResponse.content, 'base64').toString('utf-8');
+    const data = JSON.parse(content);
     return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json({ 
