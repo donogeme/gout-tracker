@@ -1,8 +1,14 @@
 import { NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
+// Using OpenRouter with OpenAI SDK
+const openai = new OpenAI({
+  baseURL: 'https://openrouter.ai/api/v1',
+  apiKey: process.env.OPENROUTER_API_KEY || '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',
+  defaultHeaders: {
+    'HTTP-Referer': 'https://gout-tracker.vercel.app',
+    'X-Title': 'Gout Food Tracker',
+  }
 });
 
 const SYSTEM_PROMPT = `You are a gout diet analyzer. Analyze foods and meals for their gout-friendliness based on purine content.
@@ -32,7 +38,7 @@ LOW PURINE (SAFE):
 
 **Your Analysis Format:**
 
-For each query, respond with JSON:
+Respond with ONLY valid JSON (no markdown, no code blocks):
 {
   "rating": "avoid" | "caution" | "safe",
   "emoji": "❌" | "⚠️" | "✅",
@@ -61,49 +67,51 @@ export async function POST(request: Request) {
       );
     }
 
-    const content: any[] = [];
+    const messages: any[] = [];
 
     if (image) {
       // Image analysis
-      content.push({
-        type: 'image',
-        source: {
-          type: 'base64',
-          media_type: 'image/jpeg',
-          data: image.replace(/^data:image\/\w+;base64,/, ''),
-        },
+      const userContent: any[] = [];
+      
+      userContent.push({
+        type: 'image_url',
+        image_url: {
+          url: image
+        }
       });
-      content.push({
+      
+      userContent.push({
         type: 'text',
         text: text 
-          ? `Analyze this meal photo. User description: "${text}". Provide gout-friendliness analysis.`
-          : 'Analyze this meal photo for gout-friendliness. Identify the foods and provide detailed analysis.',
+          ? `Analyze this meal photo. User description: "${text}". Provide gout-friendliness analysis in JSON format.`
+          : 'Analyze this meal photo for gout-friendliness. Identify the foods and provide detailed analysis in JSON format.',
+      });
+      
+      messages.push({
+        role: 'user',
+        content: userContent
       });
     } else {
       // Text-only analysis
-      content.push({
-        type: 'text',
-        text: `Analyze this food/meal for gout-friendliness: "${text}"`,
+      messages.push({
+        role: 'user',
+        content: `Analyze this food/meal for gout-friendliness: "${text}". Respond in JSON format only.`
       });
     }
 
-    const message = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
-      max_tokens: 1024,
-      system: SYSTEM_PROMPT,
+    const completion = await openai.chat.completions.create({
+      model: 'google/gemini-2.0-flash-exp:free',
       messages: [
-        {
-          role: 'user',
-          content,
-        },
+        { role: 'system', content: SYSTEM_PROMPT },
+        ...messages
       ],
+      temperature: 0.3,
+      max_tokens: 1000,
     });
 
-    const responseText = message.content[0].type === 'text' 
-      ? message.content[0].text 
-      : '';
+    const responseText = completion.choices[0]?.message?.content || '';
 
-    // Extract JSON from response
+    // Extract JSON from response (strip any markdown)
     const jsonMatch = responseText.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error('Failed to parse AI response');
