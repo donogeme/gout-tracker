@@ -78,13 +78,13 @@ function analyzeFood(foodText: string) {
       // Mostly safe foods
       rating = 'caution';
       emoji = '⚠️';
-      const items = matches.avoid.map(m => m[0]).join(', ');
+      const items = matches.avoid.map((m: any) => m[0]).join(', ');
       advice = `Contains high-purine ${items}, but balanced with plenty of safe foods. Keep portions small.`;
       overall = `This meal has ${safeCount} safe ingredients helping balance ${matches.avoid.length} high-purine item(s). The vegetables and grains are protective.`;
     } else {
       rating = 'avoid';
       emoji = '❌';
-      const items = matches.avoid.map(m => m[0]).join(', ');
+      const items = matches.avoid.map((m: any) => m[0]).join(', ');
       advice = `HIGH PURINE - Avoid: ${items}`;
       overall = matches.safe.length > 0 
         ? `Even with ${matches.safe.length} safe food(s), the high-purine content is too risky.`
@@ -94,7 +94,7 @@ function analyzeFood(foodText: string) {
     // Moderate purine
     rating = 'caution';
     emoji = '⚠️';
-    const items = matches.caution.map(m => m[0]).join(', ');
+    const items = matches.caution.map((m: any) => m[0]).join(', ');
     advice = safeCount > 0
       ? `Moderate purine (${items}) balanced with safe foods - small portions okay.`
       : `Moderate purine - Small portions okay: ${items}`;
@@ -106,7 +106,7 @@ function analyzeFood(foodText: string) {
     rating = 'safe';
     emoji = '✅';
     if (matches.beneficial.length > 0) {
-      const items = matches.beneficial.map(m => m[0]).join(', ');
+      const items = matches.beneficial.map((m: any) => m[0]).join(', ');
       advice = `Excellent choice! Includes beneficial: ${items}`;
       overall = `This meal is packed with gout-friendly ingredients and anti-inflammatory benefits.`;
     } else {
@@ -123,10 +123,10 @@ function analyzeFood(foodText: string) {
   
   // Build components list
   const components = [
-    ...matches.avoid.map(m => ({ food: m[0], purine_level: 'high', note: m[1] })),
-    ...matches.caution.map(m => ({ food: m[0], purine_level: 'moderate', note: m[1] })),
-    ...matches.safe.map(m => ({ food: m[0], purine_level: 'low', note: m[1] })),
-    ...matches.beneficial.map(m => ({ food: m[0], purine_level: 'beneficial', note: m[1] }))
+    ...matches.avoid.map((m: any) => ({ food: m[0], purine_level: 'high', note: m[1] })),
+    ...matches.caution.map((m: any) => ({ food: m[0], purine_level: 'moderate', note: m[1] })),
+    ...matches.safe.map((m: any) => ({ food: m[0], purine_level: 'low', note: m[1] })),
+    ...matches.beneficial.map((m: any) => ({ food: m[0], purine_level: 'beneficial', note: m[1] }))
   ];
   
   return { rating, emoji, advice, matches, overall_assessment: overall, components };
